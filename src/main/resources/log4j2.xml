@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="debug">
+	<Properties>
+		<Property name="basePath">logs</Property>
+	</Properties>
+
+	<Appenders>
+
+		<RollingFile name="fileLogger" fileName="${basePath}/app.log"
+			filePattern="${basePath}/$${date:yyyy-MM}/app-%d{yyyy-MM-dd}.%i.log.gz"
+			bufferedIO="true" bufferSize="65536">
+
+			<PatternLayout>
+				<pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+				</pattern>
+			</PatternLayout>
+			<Policies>
+				<OnStartupTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="250 MB" />
+				<TimeBasedTriggeringPolicy interval="1"
+					modulate="true" />
+			</Policies>
+			<DefaultRolloverStrategy max="100">
+
+			</DefaultRolloverStrategy>
+
+		</RollingFile>
+
+		<Console name="console" target="SYSTEM_OUT">
+			<PatternLayout
+				pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n" />
+		</Console>
+
+		<Async name="Async">
+			<AppenderRef ref="fileLogger" leveel="trace" />
+			<DisruptorBlockingQueue />
+		</Async>
+
+	</Appenders>
+	<Loggers>
+		<Logger name="com.howtodoinjava" level="debug" additivity="true">
+			<appender-ref ref="fileLogger" level="debug" />
+		</Logger>
+		<Root level="trace" additivity="false">
+			<appender-ref ref="fileLogger" />
+		</Root>
+	</Loggers>
+</Configuration>
